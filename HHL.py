@@ -23,12 +23,14 @@ def solve(counts, num_qubits):
 def hhl(matrix ,vector):
     num_qubits = int(np.log2(len(vector))) + 1
     qc = QuantumCircuit(num_qubits)
+    #prep states
     qc.h(range(num_qubits-1))
     qc.x(num_qubits-1)
+    #apply gate
     matrix_gate = matrix_to_gate(matrix)
     qc.append(matrix_gate, range(num_qubits))
+    #prep for/and measure
     qc.h(range(num_qubits-1))
-    qc.barrier()
     qc.measure_all()
 
     simulator = Aer.get_backend('qasm_simulator')
@@ -42,3 +44,12 @@ xanswer = hhl(x_gate, vector)
 print(f"Answer: {xanswer}")
 zanswer = hhl(z_gate, vector)
 print(f"Answer: {zanswer}")
+
+#trying to solve linear system
+x = np.array([[3, 2], [1, 1]])
+sums = np.array([12, 5])
+linear = hhl(x, sums)
+print(f"Answer: {linear}")
+
+# does not work since 'Input matrix is not unitary.'
+
