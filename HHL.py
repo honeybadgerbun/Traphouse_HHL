@@ -36,20 +36,27 @@ def hhl(matrix ,vector):
     simulator = Aer.get_backend('qasm_simulator')
     result = execute(qc, simulator, shots=1).result()
     counts = result.get_counts(qc)
-    solution = solve(counts, num_qubits)
+    x_solution = solve(counts, num_qubits)
+    y_solution = float(vector[0] - matrix[0][0])
 
-    return solution
+    return [x_solution, y_solution]
     
-xanswer = hhl(x_gate, vector)
-print(f"Answer: {xanswer}")
-zanswer = hhl(z_gate, vector)
-print(f"Answer: {zanswer}")
+test1 = hhl(x_gate, vector)
+print(f"X is {test1[0]}, Y is {test1[1]}")
+test2 = hhl(z_gate, vector)
+print(f"X is {test2[0]}, Y is {test2[1]}")
 
-#trying to solve linear system
-x = np.array([[3, 2], [1, 1]])
-sums = np.array([12, 5])
-linear = hhl(x, sums)
-print(f"Answer: {linear}")
 
-# does not work since 'Input matrix is not unitary.'
+
+'''
+Example : x + 2y = 3 / x + y = 4
+x + 2y becomes [1, 2], x + y becomes [1,1] variables put into matrix
+solutions are put into vector [3, 4]
+
+in other form:
+ax + by = c / dx + ey = f
+matrix = [[a, b], [d, e]]
+vector = [c, f]
+'''
+
 
