@@ -1,9 +1,22 @@
 import numpy as np
+import math
 from qiskit import QuantumCircuit, execute, Aer
 
 x_gate = np.array([[0,1],[1,0]])
 z_gate = np.array([[1,0],[0,-1]])
 vector = np.array([1,0])
+
+def make_matrix_unitary(matrix):
+    a = matrix[0][0]
+    b = matrix[0][1] * -1
+    c = matrix[1][0] * -1
+    d = matrix[1][1]
+    cofactor = np.array([[d,b],[c,a]])
+    transpose = np.array([[d,c],[b,a]])
+    factor = math.sqrt((a * d) - (c * b))
+    for i in range(2):
+        for x in range(2):
+            matrix[i][x] *= factor
 
 def matrix_to_gate(matrix):
     gate = QuantumCircuit(2)
@@ -45,8 +58,13 @@ test1 = hhl(x_gate, vector)
 print(f"X is {test1[0]}, Y is {test1[1]}")
 test2 = hhl(z_gate, vector)
 print(f"X is {test2[0]}, Y is {test2[1]}")
-
-
+mat = np.array([[1*2,-3*2],[1*2,1*2]])
+#cofactor is [1,-3][-1,2] -> [d,-b][-c,a] /1,3 -1,1
+#transpose is [1, -1], [-3, 2] ->[d,-c][-b,a] /1,-1 3,1
+#(1*2)-(-1*-3) = -1 / 1 - (-3) = 4
+#multiply by sqrt so [i , -i],[-3i, 2i]
+vec = np.array([6, 3])
+print(hhl(mat, vec))
 
 '''
 Example : x + 2y = 3 / x + y = 4
